@@ -7,7 +7,8 @@ class TodoController < WebsocketRails::BaseController
 		@user = User.find_by(id: message)
 		# byebug
 		if @user
-			send_message :tasks, @user.tasks.to_json	
+          WebsocketRails[:tasks].trigger 'change', @user.tasks.to_json
+		  send_message :tasks, @user.tasks.to_json	
 		end		
 	end
 

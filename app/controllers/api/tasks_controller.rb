@@ -5,7 +5,7 @@ module Api
 		before_action :get_user
 		
 		def index	
-			
+            WebsocketRails[:tasks].trigger 'change', @user.tasks.to_json
 			render json: @user.tasks
 		end
 
@@ -38,6 +38,7 @@ module Api
 		def destroy
 			@task = @user.tasks.find_by(id: params[:id])
 			@task.destroy
+            WebsocketRails[:tasks].trigger 'change', @user.tasks.to_json
 			render json: {}
 		end
 
