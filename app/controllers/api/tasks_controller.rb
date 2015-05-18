@@ -5,13 +5,11 @@ module Api
 		before_action :get_user
 		
 		def index	
-            WebsocketRails[:tasks].trigger 'change', Task.where(performer: @user.email).to_json
-			render json: Task.where(performer: @user.email)
+          render json: Task.where(performer: @user.email)
 		end
 
 		def show
 			@task = @user.tasks.find_by(id: params[:id])
-
 			render json: @task
 		end
 
@@ -19,7 +17,8 @@ module Api
 			@task = @user.tasks.build(task_params)
 
 			if @task.save
-				render json: {}
+                WebsocketRails[:tasks].trigger 'change', Task.where(performer: @user.email).to_json
+                render nothing: true
 			else
 				render json: {}, status: :unprocessable_entity
 			end
